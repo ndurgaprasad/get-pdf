@@ -1,0 +1,55 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport"
+          content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Download Pdf</title>
+</head>
+<body>
+    <div style="border: 1px solid #ddd;
+      border-radius: 5px;
+      padding: 20px;
+      text-align: center;">
+        <h2>Please click below button to download PDF</h2>
+        <button id="download-pdf"
+                style="background-color: blue;
+                    border: none;
+                    color: white;
+                    padding: 15px 32px;
+                    text-align: center;
+                    text-decoration: none;
+                    display: inline-block;
+                    font-size: 16px;
+                    margin: 4px 2px;
+                    cursor: pointer;">
+            Download PDF
+        </button>
+    </div>
+
+    <script>
+        const downloadPdfButton = document.getElementById('download-pdf');
+
+        downloadPdfButton.addEventListener('click', () => {
+            fetch('/download-pdf', {
+                method: 'GET',
+                headers: {
+                    'Content-Type': 'application/pdf'
+                }
+            })
+                .then(response => response.blob())
+                .then(blob => {
+                    const url = window.URL.createObjectURL(new Blob([blob]));
+                    const link = document.createElement('a');
+                    link.href = url;
+                    link.setAttribute('download', 'document.pdf');
+                    document.body.appendChild(link);
+                    link.click();
+                    link.parentNode.removeChild(link);
+                })
+                .catch(error => console.error(error));
+        });
+    </script>
+</body>
+</html>
